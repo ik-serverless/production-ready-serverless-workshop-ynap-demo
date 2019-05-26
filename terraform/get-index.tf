@@ -4,7 +4,7 @@ resource "aws_lambda_function" "get_index" {
   s3_bucket = "${local.deployment_bucket}"
   s3_key    = "${local.deployment_key}"
 
-  handler = "functions/hello.handler"
+  handler = "functions/get-index.handler"
   runtime = "nodejs8.10"
 
   role = "${aws_iam_role.get_index_lambda_role.arn}"
