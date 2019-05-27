@@ -8,6 +8,12 @@ resource "aws_lambda_function" "get_index" {
   runtime = "nodejs8.10"
 
   role = "${aws_iam_role.get_index_lambda_role.arn}"
+
+  environment {
+    variables = {
+      restaurants_api = "https://${aws_api_gateway_rest_api.api.id}.execute-api.us-east-1.amazonaws.com/${var.stage}/restaurants"
+    }
+  }
 }
 
 # IAM role which dictates what other AWS services the hello function can access

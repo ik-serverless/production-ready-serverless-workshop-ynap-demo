@@ -1,4 +1,9 @@
 const fs = require("fs")
+const Mustache = require('mustache')
+const http = require('superagent-promise')(require('superagent'), Promise)
+
+const restaurantsApiRoot = process.env.restaurants_api
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 let html
 
@@ -12,8 +17,15 @@ function loadHtml () {
   return html
 }
 
+const getRestaurants = async () => {
+  return (await http.get(restaurantsApiRoot)).body
+}
+
 module.exports.handler = async (event, context) => {
-  const html = loadHtml()
+  const template = loadHtml()
+  const restaurants = await getRestaurants()
+  const dayOfWeek = days[new Date().getDay()]
+  const html = Mustache.render(template, { dayOfWeek, restaurants })
   const response = {
     statusCode: 200,
     headers: {
