@@ -15,7 +15,7 @@ variable "stage" {
   default     = "dev"
 }
 
-variable "version" {
-  description = "The version of the deployment"
+variable "file_name" {
+  description = "The name of the deployment package"
   type        = "string"
 }
