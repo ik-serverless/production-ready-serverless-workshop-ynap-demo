@@ -41,3 +41,25 @@ resource "aws_iam_role_policy_attachment" "get_index_lambda_role_policy" {
   role       = "${aws_iam_role.get_index_lambda_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+resource "aws_iam_policy" "get_index_lambda_apigateway_policy" {
+  name = "apigateway_execute"
+  path = "/"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "execute-api:Invoke",
+      "Resource": "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:*/*/GET/restaurants"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "get_index_lambda_apigateway_policy" {
+  role       = "${aws_iam_role.get_index_lambda_role.name}"
+  policy_arn = "${aws_iam_policy.get_index_lambda_apigateway_policy.arn}"
+}
