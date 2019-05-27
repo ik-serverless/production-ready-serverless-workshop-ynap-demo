@@ -28,13 +28,17 @@ const getRestaurants = async () => {
 
   aws4.sign(opts)
 
-  return (await http
+  const httpReq = http
     .get(restaurantsApiRoot)
     .set('Host', opts.headers['Host'])
     .set('X-Amz-Date', opts.headers['X-Amz-Date'])
     .set('Authorization', opts.headers['Authorization'])
-    .set('X-Amz-Security-Token', opts.headers['X-Amz-Security-Token'])
-  ).body
+
+  if (opts.headers['X-Amz-Security-Token']) {
+    httpReq.set('X-Amz-Security-Token', opts.headers['X-Amz-Security-Token'])
+  }
+
+  return (await httpReq).body
 }
 
 module.exports.handler = async (event, context) => {
