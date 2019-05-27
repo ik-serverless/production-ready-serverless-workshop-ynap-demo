@@ -11,8 +11,6 @@ const init = async () => {
   process.env.restaurants_api      = "https://sr73zpk0el.execute-api.us-east-1.amazonaws.com/dev/restaurants"
   process.env.restaurants_table    = "restaurants_yancui"
   process.env.AWS_REGION           = "us-east-1"
-  process.env.cognito_user_pool_id = "test_cognito_user_pool_id"
-  process.env.cognito_client_id    = "test_cognito_client_id"
   
   const { credentials } = await promisify(awscred.load)()
   

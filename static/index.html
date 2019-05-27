@@ -3,6 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <title>Big Mouth</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" 
+            integrity="sha384-Dziy8F2VlJQLMShA6FHWNul/veM9bCkRUaLqr199K94ntO5QUrLJBEbYegdSkkqX" 
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     
     <style>
       .fullscreenDiv {
@@ -89,6 +97,40 @@
     </style>
 
     <script>
+      const SEARCH_URL = '{{& searchUrl}}';
+
+      function searchRestaurants() {
+        var theme = $("#theme")[0].value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', SEARCH_URL, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({ theme }));
+
+        xhr.onreadystatechange = function (e) {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var restaurants = JSON.parse(xhr.responseText);
+            var restaurantsList = $("#restaurantsUl");
+            restaurantsList.empty();
+
+            for (var restaurant of restaurants) {
+              restaurantsList.append(`
+              <li class="restaurant">
+                <ul class="column-container">
+                    <li class="item restaurant-name">${restaurant.name}</li>
+                    <li class="item restaurant-image">
+                      <img src="${restaurant.image}">
+                    </li>
+                </ul>
+              </li>
+              `);
+            }
+
+          } else if (xhr.readyState === 4) {
+            alert(xhr.responseText);
+          }
+        };
+      }
     </script>
   </head>
 
@@ -100,12 +142,12 @@
         </li>
         <li class="item">
           <input id="theme" type="text" size="50" placeholder="enter a theme, eg. cartoon"/>
-          <button onclick="search()">Find Restaurants</button>
+          <button onclick="searchRestaurants()">Find Restaurants</button>
         </li>
         <li>
           <div class="restaurantsDiv column-container">
             <b class="dayOfWeek">{{dayOfWeek}}</b>
-            <ul class="row-container">
+            <ul id="restaurantsUl" class="row-container">
               {{#restaurants}}
               <li class="restaurant">
                 <ul class="column-container">

@@ -5,7 +5,8 @@ resource "aws_api_gateway_rest_api" "api" {
 resource "aws_api_gateway_deployment" "api" {
   depends_on = [
     "aws_api_gateway_integration.get_index_lambda",
-    "aws_api_gateway_integration.get_restaurants_lambda"
+    "aws_api_gateway_integration.get_restaurants_lambda",
+    "aws_api_gateway_integration.search_restaurants_lambda"
   ]
 
   lifecycle {
@@ -75,6 +76,39 @@ resource "aws_lambda_permission" "apigw_get_restaurants" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.get_restaurants.arn}"
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"
+}
+
+# SEARCH-RESTAURANTS
+resource "aws_api_gateway_resource" "search_restaurants" {
+  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
+  parent_id   = "${aws_api_gateway_resource.get_restaurants.id}"
+  path_part   = "search"
+}
+
+resource "aws_api_gateway_method" "search_restaurants_post" {
+  rest_api_id   = "${aws_api_gateway_rest_api.api.id}"
+  resource_id   = "${aws_api_gateway_resource.search_restaurants.id}"
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "search_restaurants_lambda" {
+  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
+  resource_id = "${aws_api_gateway_method.search_restaurants_post.resource_id}"
+  http_method = "${aws_api_gateway_method.search_restaurants_post.http_method}"
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = "${aws_lambda_function.search_restaurants.invoke_arn}"
+}
+
+resource "aws_lambda_permission" "apigw_search_restaurants" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "${aws_lambda_function.search_restaurants.arn}"
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"

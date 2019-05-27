@@ -45,7 +45,11 @@ module.exports.handler = async (event, context) => {
   const template = loadHtml()
   const restaurants = await getRestaurants()
   const dayOfWeek = days[new Date().getDay()]
-  const html = Mustache.render(template, { dayOfWeek, restaurants })
+  const html = Mustache.render(template, { 
+    dayOfWeek, 
+    restaurants, 
+    searchUrl: `${restaurantsApiRoot}/search` 
+  })
   const response = {
     statusCode: 200,
     headers: {

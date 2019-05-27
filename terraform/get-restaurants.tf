@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "get_restaurants_lambda_role_policy" {
 }
 
 resource "aws_iam_policy" "get_restaurants_lambda_dynamodb_policy" {
-  name = "dynamodb_scan"
+  name = "get_restaurants_dynamodb_scan"
   path = "/"
   policy = <<EOF
 {
