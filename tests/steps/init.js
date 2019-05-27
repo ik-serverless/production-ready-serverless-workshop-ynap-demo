@@ -8,6 +8,7 @@ const init = async () => {
     return
   }
 
+  process.env.TEST_ROOT = "https://sr73zpk0el.execute-api.us-east-1.amazonaws.com/dev"
   process.env.restaurants_api      = "https://sr73zpk0el.execute-api.us-east-1.amazonaws.com/dev/restaurants"
   process.env.restaurants_table    = "restaurants_yancui"
   process.env.AWS_REGION           = "us-east-1"
