@@ -18,9 +18,10 @@ pipeline {
       steps {
         sh 'npm run acceptance'
       }
-    }
+    }    
     stage('Deploy Dev') {
       steps {
+        sh 'sudo apt-get install zip'
         sh './build.sh deploy dev'
       }
     }
