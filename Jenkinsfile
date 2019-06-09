@@ -21,8 +21,7 @@ pipeline {
     }    
     stage('Deploy Dev') {
       steps {
-        sh 'apt-get install sudo -y'
-        sh 'sudo apt-get install zip'
+        sh 'apt-get install zip'
         sh './build.sh deploy dev'
       }
     }
