@@ -20,8 +20,10 @@
     "superagent-promise": "^1.1.0"
   },
   "devDependencies": {
+    "archiver": "^3.0.0",
     "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.3",
+    "md5-file": "^4.0.0",
     "mocha": "^6.1.4"
   }
 }
