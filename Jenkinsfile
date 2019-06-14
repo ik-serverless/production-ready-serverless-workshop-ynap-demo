@@ -1,7 +1,7 @@
 pipeline {
-  agent any
-
-  tools {nodejs "node"}
+  agent {
+    docker { image 'danbuk/drone-terraform:0.11.8-0.0.3' }
+  }
 
   stages {
     stage('Install dependencies') {
