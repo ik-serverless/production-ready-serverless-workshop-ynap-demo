@@ -5,8 +5,7 @@ steps:
   - name: deploy to dev
     image: node:12.4.0-alpine
     commands:
-      - ls
-      - ./build.sh deploy dev
+      - /bin/bash ./build.sh deploy dev
     when:
       event:
         - push
