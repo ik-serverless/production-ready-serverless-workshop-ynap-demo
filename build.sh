@@ -18,7 +18,10 @@ elif [ "$1" = "deploy" ] && [ $# -eq 2 ]; then
   STAGE=$2
 
   npm ci
-  MD5=$(node build.js)
+  zip -r workshop.zip functions static node_modules
+
+  MD5=$(md5 -q workshop.zip)
+  aws s3 cp workshop.zip s3://ynap-production-ready-serverless-yancui/workshop/$MD5.zip
   
   cd terraform
   terraform apply --var "my_name=yancui" --var "file_name=$MD5"
