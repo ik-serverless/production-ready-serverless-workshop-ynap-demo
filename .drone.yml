@@ -16,8 +16,9 @@ steps:
         - push
 
   - name: deploy
-    image: hashicorp/terraform
+    image: hashicorp/terraform    
     commands:
+      - cd terraform
       - terraform apply --var "my_name=yancui" --var "file_name=test.zip"
     when:
       event:
