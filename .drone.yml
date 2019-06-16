@@ -2,17 +2,18 @@ kind: pipeline
 name: default
 
 steps:
-  - name: deploy to dev
+  - name: build
     image: node:12.4.0
     commands:
-      - /bin/bash ./build.sh deploy dev
+      - /bin/bash ./build.sh build
     when:
       event:
         - push
 
   - name: deploy
-    image: jmccann/drone-terraform:5.2-0.11.11
-    root_dir: terraform
+    image: hashicorp/terraform
+    commands:
+      - /bin/bash ./build.sh deploy dev
     when:
       event:
         - push
