@@ -14,7 +14,7 @@ instruction()
 if [ $# -eq 0 ]; then
   instruction
   exit 1
-elif [ "$1" = "build" ] && [$# -eq 1]; then
+elif [ "$1" = "build" ] && [ $# -eq 1 ]; then
   npm ci
   zip -r workshop.zip functions static node_modules
 
