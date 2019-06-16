@@ -5,7 +5,8 @@ steps:
   - name: build
     image: node:12.4.0
     commands:
-      - sudo apt-get install zip
+      - apt-get update
+      - apt-get -y install zip
       - /bin/bash ./build.sh build
     when:
       event:
