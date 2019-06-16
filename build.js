@@ -8,12 +8,16 @@ const output = fs.createWriteStream(__dirname + '/workshop.zip')
 const archive = archiver('zip')
 
 output.on('close', function () {
+  console.log('deployment artefact created')
+
   md5File('workshop.zip', (err, md5) => {
     if (err) {
       throw err
     }
 
     const filename = `workshop/${md5}.zip`
+    console.log(`uploading to S3 as ${filename}`)
+
     S3.upload({
       Bucket: 'ynap-production-ready-serverless-yancui',
       Key: filename,
@@ -23,7 +27,7 @@ output.on('close', function () {
         throw err
       }
 
-      console.log(md5)
+      console.log('artefact has been uploaded to S3')
     })
   })
 })
