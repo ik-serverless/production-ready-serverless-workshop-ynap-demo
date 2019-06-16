@@ -3,7 +3,7 @@ name: default
 
 steps:
   - name: deploy to dev
-    image: node:12.4.0-alpine
+    image: node:12.4.0
     commands:
       - /bin/bash ./build.sh deploy dev
     when:
