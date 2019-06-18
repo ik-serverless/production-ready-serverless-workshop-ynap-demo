@@ -19,7 +19,6 @@ steps:
   - name: build
     image: node:12.4.0
     commands:
-      - npm ci
       - node build.js "yancui"
     environment:
       AWS_ACCESS_KEY_ID:
@@ -49,7 +48,6 @@ steps:
   - name: acceptance test
     image: node:12.4.0
     commands:
-      - npm ci
       - npm run acceptance
     environment:
       AWS_ACCESS_KEY_ID:
