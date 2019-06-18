@@ -5,7 +5,8 @@ steps:
   - name: build
     image: node:12.4.0
     commands:
-      - /bin/bash ./build.sh build
+      - npm ci
+      - node build.js "yancui"
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
