@@ -7,6 +7,11 @@ const S3 = new AWS.S3()
 const output = fs.createWriteStream(__dirname + '/workshop.zip')
 const archive = archiver('zip')
 
+const [node, path, myName, ...rest] = process.argv
+const Bucket = `ynap-production-ready-serverless-${myName}`
+
+console.log(`deployment bucket is ${Bucket}`)
+
 output.on('close', function () {
   console.log('deployment artefact created')
 
@@ -19,15 +24,17 @@ output.on('close', function () {
     console.log(`uploading to S3 as ${filename}`)
 
     S3.upload({
-      Bucket: 'ynap-production-ready-serverless-yancui',
+      Bucket,
       Key: filename,
       Body: fs.createReadStream(__dirname + '/workshop.zip')
     }, (err, resp) => {
       if (err) {
         throw err
       }
-
+      
       console.log('artefact has been uploaded to S3')
+      
+      fs.writeFileSync('workshop_md5.txt', md5)
     })
   })
 })

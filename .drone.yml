@@ -18,9 +18,10 @@ steps:
   - name: deploy
     image: hashicorp/terraform:0.11.12
     commands:
-      - cd terraform
-      - terraform init
-      - terraform apply --var "my_name=yancui" --var "file_name=test.zip" -auto-approve
+      # - cd terraform
+      # - terraform init
+      # - terraform apply --var "my_name=yancui" --var "file_name=test.zip" -auto-approve
+      - /bin/bash ./build.sh deploy dev
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
