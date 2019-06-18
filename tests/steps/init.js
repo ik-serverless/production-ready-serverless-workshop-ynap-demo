@@ -1,17 +1,41 @@
+const _ = require('lodash')
 const { promisify } = require('util')
 const awscred = require('awscred')
+const { REGION, STAGE } = process.env
+const AWS = require('aws-sdk')
+AWS.config.region = REGION
+const SSM = new AWS.SSM()
 
 let initialized = false
+
+const getParameters = async (keys) => {
+  const prefix = `/big-mouth-yancui/${STAGE}/`
+  const req = {
+    Names: keys.map(key => `${prefix}${key}`)
+  }
+  const resp = await SSM.getParameters(req).promise()
+  return _.reduce(resp.Parameters, function(obj, param) {
+    obj[param.Name.substr(prefix.length)] = param.Value
+    return obj
+   }, {})
+}
 
 const init = async () => {
   if (initialized) {
     return
   }
 
-  process.env.TEST_ROOT = "https://sr73zpk0el.execute-api.us-east-1.amazonaws.com/dev"
-  process.env.restaurants_api = "https://sr73zpk0el.execute-api.us-east-1.amazonaws.com/dev/restaurants"
-  process.env.restaurants_table = "restaurants_yancui"
-  process.env.AWS_REGION = "us-east-1"
+  const params = await getParameters([
+    'table_name',
+    'url'
+  ])
+
+  console.log('SSM params loaded')
+
+  process.env.TEST_ROOT = params.url
+  process.env.restaurants_api = `${params.url}/restaurants`
+  process.env.restaurants_table = params.table_name
+  process.env.AWS_REGION = REGION
   
   const { credentials } = await promisify(awscred.load)()
   

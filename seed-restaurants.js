@@ -1,12 +1,15 @@
+const { REGION, STAGE } = process.env
+
 const AWS = require('aws-sdk')
-AWS.config.region = 'us-east-1'
+AWS.config.region = REGION
 const dynamodb = new AWS.DynamoDB.DocumentClient()
+const ssm = new AWS.SSM()
 
 let restaurants = [
-  {
-    name: "Fangtasia",
-    image: "https://d2qt42rcwzspd6.cloudfront.net/manning/fangtasia.png",
-    themes: ["true blood"]
+  { 
+    name: "Fangtasia", 
+    image: "https://d2qt42rcwzspd6.cloudfront.net/manning/fangtasia.png", 
+    themes: ["true blood"] 
   },
   { 
     name: "Shoney's", 
@@ -45,15 +48,31 @@ let restaurants = [
   },
 ];
 
-let putReqs = restaurants.map(x => ({
-  PutRequest: {
-    Item: x
+const getTableName = async () => {
+  console.log('getting table name...')
+  const req = {
+    Name: `/big-mouth-yancui/${STAGE}/table_name`
   }
-}))
-
-let req = {
-  RequestItems: {
-    'restaurants_yancui': putReqs
-  }
+  const ssmResp = await ssm.getParameter(req).promise()
+  return ssmResp.Parameter.Value
 }
-dynamodb.batchWrite(req).promise().then(() => console.log("all done"))
+
+const run = async () => {
+  const tableName = await getTableName()
+
+  console.log(`table name: `, tableName)
+
+  let putReqs = restaurants.map(x => ({
+    PutRequest: {
+      Item: x
+    }
+  }))
+  
+  const req = { 
+    RequestItems: {}
+  }
+  req.RequestItems[tableName] = putReqs
+  await dynamodb.batchWrite(req).promise()
+}
+
+run().then(() => console.log("all done")).catch(err => console.error(err.message))
