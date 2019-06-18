@@ -64,3 +64,4 @@ typings/
 *.tfstate
 *.tfstate.backup
 workshop.zip
+workshop_md5.txt
