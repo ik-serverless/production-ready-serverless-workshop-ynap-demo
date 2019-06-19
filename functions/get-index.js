@@ -3,6 +3,7 @@ const Mustache = require('mustache')
 const http = require('superagent-promise')(require('superagent'), Promise)
 const aws4 = require('aws4')
 const URL = require('url')
+const Log = require('@perform/lambda-powertools-logger')
 
 const restaurantsApiRoot = process.env.restaurants_api
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -12,9 +13,9 @@ let html
 
 function loadHtml () {
   if (!html) {
-    console.log('loading index.html...')
+    Log.debug('loading index.html...')
     html = fs.readFileSync('static/index.html', 'utf-8')
-    console.log('loaded')
+    Log.debug('loaded')
   }
   
   return html
@@ -45,6 +46,8 @@ const getRestaurants = async () => {
 module.exports.handler = async (event, context) => {
   const template = loadHtml()
   const restaurants = await getRestaurants()
+  Log.debug('received restaurants', { count: restaurants.length })
+
   const dayOfWeek = days[new Date().getDay()]
   const html = Mustache.render(template, { 
     dayOfWeek, 

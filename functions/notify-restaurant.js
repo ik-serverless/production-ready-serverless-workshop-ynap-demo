@@ -3,6 +3,7 @@ const { getRecords } = require('../lib/kinesis')
 const AWS = require('aws-sdk')
 const kinesis = new AWS.Kinesis()
 const sns = new AWS.SNS()
+const Log = require('@perform/lambda-powertools-logger')
 
 const streamName = process.env.order_events_stream
 const topicArn = process.env.restaurant_notification_topic
@@ -17,7 +18,9 @@ module.exports.handler = async (event, context) => {
       TopicArn: topicArn
     };
     await sns.publish(snsReq).promise()
-    console.log(`notified restaurant [${order.restaurantName}] of order [${order.orderId}]`)
+    Log.debug(
+      'notified restaurant of order', 
+      { restaurantName: order.restaurantName, orderId: order.orderId})
 
     const data = _.clone(order)
     data.eventType = 'restaurant_notified'
@@ -28,6 +31,6 @@ module.exports.handler = async (event, context) => {
       StreamName: streamName
     }
     await kinesis.putRecord(kinesisReq).promise()
-    console.log(`published 'restaurant_notified' event to Kinesis`)
+    Log.debug(`published 'restaurant_notified' event to Kinesis`)
   }  
 }
