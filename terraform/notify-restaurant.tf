@@ -51,7 +51,13 @@ resource "aws_iam_policy" "notify_restaurant_lambda_policy" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "kinesis:PutRecord",
+      "Action": [
+        "kinesis:PutRecord",
+        "kinesis:GetRecords",
+        "kinesis:GetShardIterator",
+        "kinesis:DescribeStream",
+        "kinesis:ListStreams"
+      ],
       "Resource": "${aws_kinesis_stream.orders_stream.arn}"
     },
     {
@@ -67,4 +73,11 @@ EOF
 resource "aws_iam_role_policy_attachment" "notify_restaurant_lambda_policy" {
   role       = "${aws_iam_role.notify_restaurant_lambda_role.name}"
   policy_arn = "${aws_iam_policy.notify_restaurant_lambda_policy.arn}"
+}
+
+resource "aws_lambda_event_source_mapping" "notify_restaurant_lambda_kinesis" {
+  event_source_arn  = "${aws_kinesis_stream.orders_stream.arn}"
+  function_name     = "${aws_lambda_function.notify_restaurant.arn}"
+  starting_position = "LATEST"
+  batch_size        = 10
 }

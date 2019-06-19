@@ -48,5 +48,6 @@ archive.pipe(output)
 archive.directory('functions')
 archive.directory('static')
 archive.directory('node_modules')
+archive.directory('lib')
 
 archive.finalize()

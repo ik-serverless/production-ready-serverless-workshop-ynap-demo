@@ -18,7 +18,7 @@ elif [ "$1" = "deploy" ] && [ $# -eq 2 ]; then
   STAGE=$2
 
   npm ci
-  zip -r workshop.zip functions static node_modules
+  zip -r workshop.zip functions static node_modules lib
 
   MD5=$(md5 -q workshop.zip)
   aws s3 cp workshop.zip s3://ynap-production-ready-serverless-yancui/workshop/$MD5.zip
