@@ -42,8 +42,8 @@ resource "aws_iam_role_policy_attachment" "place_order_lambda_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_policy" "place_order_lambda_dynamodb_policy" {
-  name = "place_order_dynamodb_scan"
+resource "aws_iam_policy" "place_order_lambda_kinesis_policy" {
+  name = "place_order_kinesis"
   path = "/"
   policy = <<EOF
 {
@@ -59,7 +59,7 @@ resource "aws_iam_policy" "place_order_lambda_dynamodb_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "place_order_lambda_dynamodb_policy" {
+resource "aws_iam_role_policy_attachment" "place_order_lambda_kinesis_policy" {
   role       = "${aws_iam_role.place_order_lambda_role.name}"
-  policy_arn = "${aws_iam_policy.place_order_lambda_dynamodb_policy.arn}"
+  policy_arn = "${aws_iam_policy.place_order_lambda_kinesis_policy.arn}"
 }
