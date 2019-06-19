@@ -23,5 +23,5 @@ variable "file_name" {
 variable "log_level" {
   description = "The level functions should log at"
   type        = "string"
-  default     = "DEBUG"
+  default     = "INFO"
 }
