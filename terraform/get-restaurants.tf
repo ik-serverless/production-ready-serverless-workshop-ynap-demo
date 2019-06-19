@@ -11,7 +11,7 @@ resource "aws_lambda_function" "get_restaurants" {
 
   environment {
     variables = {
-      restaurants_table = "restaurants_${var.my_name}"
+      restaurants_table = "${aws_dynamodb_table.restaurants_table.name}"
     }
   }
 }
