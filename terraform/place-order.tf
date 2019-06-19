@@ -12,6 +12,7 @@ resource "aws_lambda_function" "place_order" {
   environment {
     variables = {
       order_events_stream = "${aws_kinesis_stream.orders_stream.name}"
+      LOG_LEVEL = "${var.log_level}"
     }
   }
 }

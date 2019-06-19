@@ -11,8 +11,9 @@ resource "aws_lambda_function" "notify_restaurant" {
 
   environment {
     variables = {
-      order_events_stream = "${aws_kinesis_stream.orders_stream.name}",
+      order_events_stream = "${aws_kinesis_stream.orders_stream.name}"
       restaurant_notification_topic = "${aws_sns_topic.restaurant_notification.arn}"
+      LOG_LEVEL = "${var.log_level}"
     }
   }
 }

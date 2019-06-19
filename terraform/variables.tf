@@ -19,3 +19,9 @@ variable "file_name" {
   description = "The name of the deployment package"
   type        = "string"
 }
+
+variable "log_level" {
+  description = "The level functions should log at"
+  type        = "string"
+  default     = "DEBUG"
+}
