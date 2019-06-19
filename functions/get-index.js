@@ -6,6 +6,7 @@ const URL = require('url')
 
 const restaurantsApiRoot = process.env.restaurants_api
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const ordersApiRoot = process.env.orders_api
 
 let html
 
@@ -48,7 +49,8 @@ module.exports.handler = async (event, context) => {
   const html = Mustache.render(template, { 
     dayOfWeek, 
     restaurants, 
-    searchUrl: `${restaurantsApiRoot}/search` 
+    searchUrl: `${restaurantsApiRoot}/search`,
+    placeOrderUrl: `${ordersApiRoot}`
   })
   const response = {
     statusCode: 200,

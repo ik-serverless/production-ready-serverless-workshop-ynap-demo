@@ -117,8 +117,19 @@ const we_invoke_search_restaurants = theme => {
   return res
 }
 
+const we_invoke_place_order = async (restaurantName) => {
+  const body = JSON.stringify({ restaurantName })
+  const res = 
+    mode === 'handler'
+      ? await viaHandler({ body }, 'place-order')
+      : await viaHttp('orders', 'POST', { body })
+  
+  return res
+}
+
 module.exports = {
   we_invoke_get_index,
   we_invoke_get_restaurants,
-  we_invoke_search_restaurants
+  we_invoke_search_restaurants,
+  we_invoke_place_order,
 }

@@ -27,7 +27,8 @@ const init = async () => {
 
   const params = await getParameters([
     'table_name',
-    'url'
+    'url',
+    'stream_name',
   ])
 
   console.log('SSM params loaded')
@@ -35,6 +36,7 @@ const init = async () => {
   process.env.TEST_ROOT = params.url
   process.env.restaurants_api = `${params.url}/restaurants`
   process.env.restaurants_table = params.table_name
+  process.env.order_events_stream = params.stream_name
   process.env.AWS_REGION = REGION
   
   const { credentials } = await promisify(awscred.load)()

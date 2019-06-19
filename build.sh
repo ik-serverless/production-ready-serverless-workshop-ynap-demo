@@ -17,7 +17,7 @@ if [ $# -eq 0 ]; then
 elif [ "$1" = "deploy" ] && [ $# -eq 2 ]; then
   STAGE=$2
 
-  npm ci
+  npm ci --production
   zip -r workshop.zip functions static node_modules
 
   MD5=$(md5 -q workshop.zip)
