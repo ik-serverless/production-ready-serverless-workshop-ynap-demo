@@ -15,3 +15,9 @@ resource "aws_ssm_parameter" "stream_name" {
   type = "String"
   value = "${aws_kinesis_stream.orders_stream.name}"
 }
+
+resource "aws_ssm_parameter" "restaurant_topic_name" {
+  name = "/big-mouth-${var.my_name}/${var.stage}/restaurant_topic_name"
+  type = "String"
+  value = "${aws_sns_topic.restaurant_notification.name}"
+}
