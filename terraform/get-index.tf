@@ -14,6 +14,7 @@ resource "aws_lambda_function" "get_index" {
       restaurants_api = "https://${aws_api_gateway_rest_api.api.id}.execute-api.us-east-1.amazonaws.com/${var.stage}/restaurants"
       orders_api = "https://${aws_api_gateway_rest_api.api.id}.execute-api.us-east-1.amazonaws.com/${var.stage}/orders"
       LOG_LEVEL = "${var.log_level}"
+      SAMPLE_DEBUG_LOG_RATE = "0.50"
     }
   }
 

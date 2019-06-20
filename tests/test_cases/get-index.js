@@ -13,7 +13,7 @@ describe(`When we invoke the GET / endpoint`, () => {
     expect(res.headers['content-type']).to.equal('text/html; charset=UTF-8')
     expect(res.body).to.not.be.null
 
-    const $ = cheerio.load(res.body)    
+    const $ = cheerio.load(res.body)
     const restaurants = $('.restaurant')
 
     expect(restaurants.length).to.equal(8)

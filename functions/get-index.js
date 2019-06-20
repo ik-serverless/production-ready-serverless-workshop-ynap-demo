@@ -8,6 +8,7 @@ const aws4 = require('aws4')
 const URL = require('url')
 const Log = require('@perform/lambda-powertools-logger')
 const wrap = require('@perform/lambda-powertools-pattern-basic')
+const CorrelationIds = require('@perform/lambda-powertools-correlation-ids')
 
 const restaurantsApiRoot = process.env.restaurants_api
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -40,7 +41,7 @@ const getRestaurants = () => {
       port: 443,
       path: url.pathname,
       method: 'GET',
-      headers: opts.headers
+      headers: Object.assign({}, CorrelationIds.get(), opts.headers)
     }
 
     const req = https.request(options, res => {

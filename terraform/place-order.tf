@@ -13,6 +13,7 @@ resource "aws_lambda_function" "place_order" {
     variables = {
       order_events_stream = "${aws_kinesis_stream.orders_stream.name}"
       LOG_LEVEL = "${var.log_level}"
+      SAMPLE_DEBUG_LOG_RATE = "0.50"
     }
   }
 

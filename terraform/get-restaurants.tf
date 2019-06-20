@@ -12,6 +12,8 @@ resource "aws_lambda_function" "get_restaurants" {
   environment {
     variables = {
       restaurants_table = "${aws_dynamodb_table.restaurants_table.name}"
+      LOG_LEVEL = "${var.log_level}"
+      SAMPLE_DEBUG_LOG_RATE = "0.50"
     }
   }
 
