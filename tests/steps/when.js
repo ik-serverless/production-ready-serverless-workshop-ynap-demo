@@ -3,6 +3,7 @@ const _ = require('lodash')
 const aws4 = require('aws4')
 const URL = require('url')
 const http = require('superagent-promise')(require('superagent'), Promise)
+const util = require('util')
 const mode = process.env.TEST_MODE
 
 const respondFrom = async (httpRes) => {
@@ -75,10 +76,10 @@ const viaHttp = async (relPath, method, opts) => {
 }
 
 const viaHandler = async (event, functionName) => {
-  const handler = require(`${APP_ROOT}/functions/${functionName}`).handler
+  const handler = util.promisify(require(`${APP_ROOT}/functions/${functionName}`).handler)
   console.log(`invoking via handler function ${functionName}`)
 
-  const context = {}
+  const context = { getRemainingTimeInMillis: () => 1000 }
   const response = await handler(event, context)
   const contentType = _.get(response, 'headers.content-type', 'application/json');
   if (_.get(response, 'body') && contentType === 'application/json') {

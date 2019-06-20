@@ -4,6 +4,7 @@ const http = require('superagent-promise')(require('superagent'), Promise)
 const aws4 = require('aws4')
 const URL = require('url')
 const Log = require('@perform/lambda-powertools-logger')
+const wrap = require('@perform/lambda-powertools-pattern-basic')
 
 const restaurantsApiRoot = process.env.restaurants_api
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -43,7 +44,7 @@ const getRestaurants = async () => {
   return (await httpReq).body
 }
 
-module.exports.handler = async (event, context) => {
+module.exports.handler = wrap(async (event, context) => {
   const template = loadHtml()
   const restaurants = await getRestaurants()
   Log.debug('received restaurants', { count: restaurants.length })
@@ -64,4 +65,4 @@ module.exports.handler = async (event, context) => {
   }
 
   return response
-}
+})
