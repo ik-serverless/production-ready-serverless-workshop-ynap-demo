@@ -16,6 +16,10 @@ resource "aws_lambda_function" "notify_restaurant" {
       LOG_LEVEL = "${var.log_level}"
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 resource "aws_iam_role" "notify_restaurant_lambda_role" {
@@ -65,6 +69,14 @@ resource "aws_iam_policy" "notify_restaurant_lambda_policy" {
       "Effect": "Allow",
       "Action": "sns:Publish",
       "Resource": "${aws_sns_topic.restaurant_notification.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+      ],
+      "Resource": "*"
     }
   ]
 }

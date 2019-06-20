@@ -15,11 +15,18 @@ resource "aws_api_gateway_deployment" "api" {
   }
 
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  stage_name  = "${var.stage}"
+  stage_name  = ""
 
   variables {
     deployed_at = "${timestamp()}"
   }
+}
+
+resource "aws_api_gateway_stage" "stage" {
+  stage_name           = "${var.stage}"
+  rest_api_id          = "${aws_api_gateway_rest_api.api.id}"
+  deployment_id        = "${aws_api_gateway_deployment.api.id}"
+  xray_tracing_enabled = true
 }
 
 # GET-INDEX
@@ -46,7 +53,7 @@ resource "aws_lambda_permission" "apigw_get_index" {
   function_name = "${aws_lambda_function.get_index.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_stage.stage.execution_arn}/*/*"
 }
 
 # GET-RESTAURANTS
@@ -79,7 +86,7 @@ resource "aws_lambda_permission" "apigw_get_restaurants" {
   function_name = "${aws_lambda_function.get_restaurants.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_stage.stage.execution_arn}/*/*"
 }
 
 # SEARCH-RESTAURANTS
@@ -112,7 +119,7 @@ resource "aws_lambda_permission" "apigw_search_restaurants" {
   function_name = "${aws_lambda_function.search_restaurants.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_stage.stage.execution_arn}/*/*"
 }
 
 # PLACE-ORDER
@@ -145,5 +152,5 @@ resource "aws_lambda_permission" "apigw_place_order" {
   function_name = "${aws_lambda_function.place_order.arn}"
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_deployment.api.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_stage.stage.execution_arn}/*/*"
 }

@@ -15,6 +15,10 @@ resource "aws_lambda_function" "place_order" {
       LOG_LEVEL = "${var.log_level}"
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 # IAM role which dictates what other AWS services the hello function can access
@@ -54,6 +58,14 @@ resource "aws_iam_policy" "place_order_lambda_kinesis_policy" {
       "Effect": "Allow",
       "Action": "kinesis:PutRecord",
       "Resource": "${aws_kinesis_stream.orders_stream.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+      ],
+      "Resource": "*"
     }
   ]
 }

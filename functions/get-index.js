@@ -1,6 +1,9 @@
 const fs = require("fs")
 const Mustache = require('mustache')
-const http = require('superagent-promise')(require('superagent'), Promise)
+const AWSXRay = require('aws-xray-sdk-core')
+const https = process.env.LAMBDA_RUNTIME_DIR
+  ? AWSXRay.captureHTTPs(require('https'))
+  : require('https')
 const aws4 = require('aws4')
 const URL = require('url')
 const Log = require('@perform/lambda-powertools-logger')
@@ -22,26 +25,35 @@ function loadHtml () {
   return html
 }
 
-const getRestaurants = async () => {
+const getRestaurants = () => {
   const url = URL.parse(restaurantsApiRoot)
   const opts = {
-    host: url.hostname,
+    host: url.hostname, 
     path: url.pathname
   }
 
   aws4.sign(opts)
 
-  const httpReq = http
-    .get(restaurantsApiRoot)
-    .set('Host', opts.headers['Host'])
-    .set('X-Amz-Date', opts.headers['X-Amz-Date'])
-    .set('Authorization', opts.headers['Authorization'])
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: url.hostname,
+      port: 443,
+      path: url.pathname,
+      method: 'GET',
+      headers: opts.headers
+    }
 
-  if (opts.headers['X-Amz-Security-Token']) {
-    httpReq.set('X-Amz-Security-Token', opts.headers['X-Amz-Security-Token'])
-  }
+    const req = https.request(options, res => {
+      res.on('data', buffer => {
+        const body = buffer.toString('utf8')
+        resolve(JSON.parse(body))
+      })
+    })
 
-  return (await httpReq).body
+    req.on('error', err => reject(err))
+
+    req.end()
+  })
 }
 
 module.exports.handler = wrap(async (event, context) => {

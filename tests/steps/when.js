@@ -79,7 +79,7 @@ const viaHandler = async (event, functionName) => {
   const handler = util.promisify(require(`${APP_ROOT}/functions/${functionName}`).handler)
   console.log(`invoking via handler function ${functionName}`)
 
-  const context = { getRemainingTimeInMillis: () => 1000 }
+  const context = {}
   const response = await handler(event, context)
   const contentType = _.get(response, 'headers.content-type', 'application/json');
   if (_.get(response, 'body') && contentType === 'application/json') {

@@ -14,6 +14,10 @@ resource "aws_lambda_function" "get_restaurants" {
       restaurants_table = "${aws_dynamodb_table.restaurants_table.name}"
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 # IAM role which dictates what other AWS services the hello function can access
@@ -53,6 +57,14 @@ resource "aws_iam_policy" "get_restaurants_lambda_dynamodb_policy" {
       "Effect": "Allow",
       "Action": "dynamodb:scan",
       "Resource": "${aws_dynamodb_table.restaurants_table.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+      ],
+      "Resource": "*"
     }
   ]
 }

@@ -16,6 +16,10 @@ resource "aws_lambda_function" "get_index" {
       LOG_LEVEL = "${var.log_level}"
     }
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 # IAM role which dictates what other AWS services the hello function can access
@@ -55,6 +59,14 @@ resource "aws_iam_policy" "get_index_lambda_apigateway_policy" {
       "Effect": "Allow",
       "Action": "execute-api:Invoke",
       "Resource": "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:*/*/GET/restaurants"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
+      ],
+      "Resource": "*"
     }
   ]
 }
