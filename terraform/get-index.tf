@@ -51,7 +51,7 @@ resource "aws_iam_role_policy_attachment" "get_index_lambda_role_policy" {
 }
 
 resource "aws_iam_policy" "get_index_lambda_apigateway_policy" {
-  name = "apigateway_execute"
+  name = "${local.function_prefix}-apigateway_execute"
   path = "/"
   policy = <<EOF
 {

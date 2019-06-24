@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "notify_restaurant_lambda_role_policy"
 }
 
 resource "aws_iam_policy" "notify_restaurant_lambda_policy" {
-  name = "notify_restaurant"
+  name = "${local.function_prefix}-notify_restaurant"
   path = "/"
   policy = <<EOF
 {

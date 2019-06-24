@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "search_restaurants_lambda_role_policy
 }
 
 resource "aws_iam_policy" "search_restaurants_lambda_dynamodb_policy" {
-  name = "search_restaurants_dynamodb_scan"
+  name = "${local.function_prefix}-search_restaurants_dynamodb_scan"
   path = "/"
   policy = <<EOF
 {

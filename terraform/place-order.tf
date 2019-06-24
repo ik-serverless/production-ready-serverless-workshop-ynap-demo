@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "place_order_lambda_role_policy" {
 }
 
 resource "aws_iam_policy" "place_order_lambda_kinesis_policy" {
-  name = "place_order_kinesis"
+  name = "${local.function_prefix}-place_order_kinesis"
   path = "/"
   policy = <<EOF
 {
